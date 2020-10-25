@@ -1,0 +1,84 @@
+.table-wrapper {
+  position: relative;
+  width: 100%;
+
+  & .caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+
+    & h3 {
+      color: rgb(139, 139, 139);
+      margin: 0;
+    }
+
+    & input {
+      width: 30%;
+    }
+  }
+
+  & table {
+    width: 100%;
+
+    & thead {
+      text-transform: capitalize;
+    }
+
+    & tbody {
+      & td.text {
+        font-size: 0.8rem;
+      }
+    }
+
+    & .pagination-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      & .pagination {
+        margin: 0;
+      }
+
+      & .pagination-left {
+        @extend .pagination-wrapper;
+        justify-content: flex-start;
+
+        & select {
+          width: 70px;
+          margin-right: 1rem;
+        }
+      }
+    }
+
+    & .no-data {
+      color: white;
+      text-align: center;
+      background-color: tomato;
+    }
+  }
+}
+
+// FOR SORTING
+.table-sortable th {
+  cursor: pointer;
+}
+
+.table-sortable .th-sort-asc::after {
+  content: "\25b4";
+}
+
+.table-sortable .th-sort-desc::after {
+  content: "\25be";
+}
+
+.table-sortable .th-sort-asc::after,
+.table-sortable .th-sort-desc::after {
+  margin-left: 5px;
+}
+
+.table-sortable .th-sort-asc,
+.table-sortable .th-sort-desc {
+  background: rgba(0, 0, 0, 0.1);
+}
