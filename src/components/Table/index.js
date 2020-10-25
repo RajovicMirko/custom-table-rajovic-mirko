@@ -96,7 +96,7 @@ class Table extends Component {
           <thead>
             { 
               header &&
-              <Header data={ header } onClick={ this.handleSort } />
+              <Header headers={ header } onClick={ this.handleSort } />
             }
           </thead>
           <tbody>

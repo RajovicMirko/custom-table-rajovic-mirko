@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Header({ data, onClick }) {
+function Header({ headers, onClick }) {
   return (
     <tr>
-      { data.map((columnTitle, i) => {
+      { headers.map((columnTitle, i) => {
         return (
           <th key={i} onClick={ () => onClick(i) } >{ columnTitle }</th>
         )
