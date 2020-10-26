@@ -61,6 +61,7 @@ class Pagination{
 
   changeData = (data) => {
     this.data = data;
+    this.currentPage = 1;
     this.recalculateData();
   }
 
