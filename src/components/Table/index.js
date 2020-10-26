@@ -3,7 +3,6 @@ import React, { Component, createRef } from 'react'
 import './table.scss';
 import Header from './Header';
 import Row from './Row';
-// import Pagination from './Pagination';
 
 import { sortTableByColumn } from './helpers/sortTableByColumn';
 import { filterTable } from './helpers/filterTable';
@@ -111,7 +110,7 @@ class Table extends Component {
               usePagination && body && !!body.length &&
               <tr>
                 <td colSpan={ colspan }>
-                  { this.state.pagination && this.state.pagination.component() }
+                  { pagination && pagination.component() }
                 </td>
               </tr>
             }

@@ -1,10 +1,10 @@
 import PaginationComponent from './';
 
 class Pagination{
-  constructor({ currentPage, rowsPerPage, rowsPerPageArray, data, callBack }){
-    this.currentPage = currentPage || 1;
-    this.rowsPerPage = rowsPerPage || 20;
-    this.rowsPerPageArray = rowsPerPageArray || [ 3, 5, 10, 20, 50, 100];
+  constructor({ currentPage = 1, rowsPerPage = 10, rowsPerPageArray = [ 3, 5, 10, 20, 50, 100], data, callBack }){
+    this.currentPage = currentPage;
+    this.rowsPerPage = rowsPerPage;
+    this.rowsPerPageArray = rowsPerPageArray;
     this.callBack = callBack;
     this.data = data;
   }
