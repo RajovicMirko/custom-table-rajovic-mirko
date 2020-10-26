@@ -3,11 +3,15 @@ import Select from './Select';
 import Button from './Button';
 
 function PaginationComponent({ pagination }) {
+  const from = pagination.dataFrom + 1;
+  const to = pagination.rowsCount > pagination.dataTo ? pagination.dataTo : pagination.rowsCount;
+  const of = pagination.rowsCount;
+  
   return (
     <div key="pagination" className="pagination-wrapper">
       <div className="pagination-left">
         <Select rowsPerPage={ pagination.rowsPerPage } options={pagination.rowsPerPageArray} onSelect={ pagination.goSelect } />
-        <small>Showing { pagination.dataFrom + 1 } to { pagination.rowsCount > pagination.dataTo ? pagination.dataTo : pagination.rowsCount } of { pagination.rowsCount } results</small>
+        <small>Showing { from } to { to } of { of } results</small>
       </div>
 
       <ul className="pagination pagination-sm">
