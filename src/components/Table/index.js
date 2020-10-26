@@ -1,17 +1,18 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 
 import './table.scss';
 import Header from './Header';
 import Row from './Row';
-import Pagination from './Pagination';
+// import Pagination from './Pagination';
 
 import { sortTableByColumn } from './helpers/sortTableByColumn';
 import { filterTable } from './helpers/filterTable';
+import Pagination from './Pagination/pagination';
 
 class Table extends Component {
   constructor(props){
     super(props)
-    this.tableRef = React.createRef();
+    this.tableRef = createRef();
     this.state={
       title: props.tableConfig.title,
       useFilter: props.tableConfig.useFilter,
@@ -27,31 +28,28 @@ class Table extends Component {
       sortingColumnIndex: null,
       asc: null,
 
-      // pagination
-      pagination: {
-        currentPage: 1,
-        rowsPerPage: (props.tableConfig.usePagination && props.tableConfig.usePagination.rowsPerPage) || 2000,
-      }
+      pagination: null
     }
   }
 
-  componentDidMount(){
-    this.setState({ filteredBody: this.props.tableConfig.body.slice(0, this.state.pagination.rowsPerPage)});
+  componentDidMount() {
+    const state = this.state;
+    state.pagination = new Pagination({
+      ...state.usePagination,
+      data: state.body,
+      callBack: (data) => this.setState({ filteredBody: data })
+    })
+
+    this.setState({ ...state });
+
+    state.pagination.init();
   }
 
   handleInputFilter = (e) => {
     const state = this.state;
     state.filterInput = e.target.value;
-    state.filteredBody = filterTable(this.state.body, this.state.filterInput);
-    this.setState({ ...state });
-
-    const data = {
-      currentPage: 1,
-      rowsPerPage: state.pagination.rowsPerPage,
-      // filteredBody: state.filteredBody
-    }
-
-    this.handlePagination(data);
+    state.filteredBody = filterTable(this.state.body, state.filterInput);
+    state.pagination.changeData(state.filteredBody);
   }
 
   handleSort = async (columnIndexClicked) => {
@@ -61,17 +59,8 @@ class Table extends Component {
     sortTableByColumn(this.tableRef.current, columnIndexClicked, this.state.asc)
   }
 
-  handlePagination = (data) => {
-    const { currentPage, rowsPerPage, filteredBody=null } = data;
-    const state = this.state;
-    state.pagination.currentPage = currentPage;
-    state.pagination.rowsPerPage = rowsPerPage;
-    if(filteredBody) state.filteredBody = filteredBody;
-    this.setState({ ...state });
-  }
-
   render() {
-    const { title, useFilter = true, usePagination = true, header, body, filteredBody, filterInput, pagination } = this.state;
+    const { title, useFilter = true, usePagination = true, header, body, filterInput, filteredBody, pagination } = this.state;
     const colspan = header.length ? header.length : "1";
     
     return (
@@ -85,14 +74,14 @@ class Table extends Component {
             <input
               className="form-control form-control-sm"
               placeholder="Filter"
-              value={ this.filterInput }
+              value={ filterInput }
               onChange={ this.handleInputFilter }
             />
           }
         </div>
 
         {/* TABLE ELEMENT */}
-        <table className="table-sortable" ref={ this.tableRef }>
+        <table className="table-sortable table-pagination" ref={ this.tableRef }>
           <thead>
             { 
               header &&
@@ -102,8 +91,7 @@ class Table extends Component {
           <tbody>
             {/* DATA EXISTS */}
             { 
-              filteredBody && !!filteredBody.length
-              && filteredBody.map(
+              filteredBody && filteredBody.length && filteredBody.map(
                 (row, i) => <Row key={i} data={ row } />
               )
             }
@@ -112,7 +100,7 @@ class Table extends Component {
             {
               filteredBody && !filteredBody.length &&
               <tr>
-                <td className="no-data" colSpan={ colspan }>No data available</td>
+                <td key="no-data" className="no-data" colSpan={ colspan }>No data available</td>
               </tr>
             }
           </tbody>
@@ -120,14 +108,10 @@ class Table extends Component {
           <tfoot>
             {/* PAGINATION */}
             {
-              usePagination && filteredBody && !!filteredBody.length &&
+              usePagination && body && !!body.length &&
               <tr>
                 <td colSpan={ colspan }>
-                  <Pagination
-                    {...pagination}
-                    onPagination={ this.handlePagination }
-                    data={ filterInput ? filteredBody : body}
-                  />
+                  { this.state.pagination && this.state.pagination.component() }
                 </td>
               </tr>
             }
