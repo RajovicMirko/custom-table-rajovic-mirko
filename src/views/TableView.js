@@ -9,8 +9,8 @@ class TableView extends Component {
       useFilter: true,
       usePagination: {
         currentPage: 1,
-        rowsPerPage: 10,
-        // rowsPerPageArray: [ 20, 50, 100 ]
+        rowsPerPage: 20,
+        rowsPerPageArray: [ 20, 50, 100 ]
       },
       header: ['Full name', 'Balance', 'Active', 'Registered', 'State', 'Country'],
       body: this.props.users
