@@ -7,7 +7,7 @@ function PaginationComponent({ pagination }) {
     <div key="pagination" className="pagination-wrapper">
       <div className="pagination-left">
         <Select rowsPerPage={ pagination.rowsPerPage } options={pagination.rowsPerPageArray} onSelect={ pagination.goSelect } />
-        <small>Showing { pagination.dataFrom + 1 } to { pagination.dataTo } of { pagination.rowsCount } results</small>
+        <small>Showing { pagination.dataFrom + 1 } to { pagination.rowsCount > pagination.dataTo ? pagination.dataTo : pagination.rowsCount } of { pagination.rowsCount } results</small>
       </div>
 
       <ul className="pagination pagination-sm">
