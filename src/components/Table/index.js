@@ -59,7 +59,7 @@ class Table extends Component {
   }
 
   render() {
-    const { title, useFilter = true, usePagination = true, header, body, filterInput, filteredBody, pagination } = this.state;
+    const { title, useFilter, usePagination, header, filterInput, filteredBody, pagination } = this.state;
     const colspan = header.length ? header.length : "1";
     
     return (
@@ -107,10 +107,9 @@ class Table extends Component {
           <tfoot>
             {/* PAGINATION */}
             {
-              usePagination && body && !!body.length &&
               <tr>
                 <td colSpan={ colspan }>
-                  { pagination && pagination.component() }
+                  { usePagination && pagination && pagination.component() }
                 </td>
               </tr>
             }
