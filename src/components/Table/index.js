@@ -97,7 +97,7 @@ class Table extends Component {
 
             {/* NO DATA */}
             {
-              filteredBody && !filteredBody.length &&
+              !filteredBody &&
               <tr>
                 <td key="no-data" className="no-data" colSpan={ colspan }>No data available</td>
               </tr>

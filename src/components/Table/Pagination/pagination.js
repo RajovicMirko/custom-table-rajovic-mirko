@@ -56,7 +56,8 @@ class Pagination{
   }
 
   recalculateData = () => {
-    return this.callBack(this.data.slice(this.dataFrom, this.dataTo));
+    const newData = this.data.slice(this.dataFrom, this.dataTo);
+    return this.callBack(newData.length ? newData : null);
   }
 
   changeData = (data) => {
