@@ -39,13 +39,14 @@ class Pagination{
       // MORE THEN FIVE NUMBERS
       result = [ 1 ];
       if(this.currentPage > 3) result.push('dots1')
-      if(this.currentPage + 1 < this.maxPage) result.push(this.currentPage - 1, this.currentPage, this.currentPage + 1)
+      if(this.currentPage + 2 < this.maxPage) result.push(this.currentPage - 1, this.currentPage, this.currentPage + 1)
       if(this.currentPage >= this.maxPage - 2) result.push(this.maxPage - 4, this.maxPage - 3);
-      result.push('dots2')
+      if(this.currentPage < this.maxPage - 4) result.push('dots2')
       result.push(this.maxPage - 2, this.maxPage - 1, this.maxPage)
     }
 
     // remove duplicates
+    console.log(result);
     return result.filter((val, i, arr) => arr.slice(i + 1).indexOf(val) === -1).sort((a, b) => a - b);
   }
 
