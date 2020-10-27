@@ -37,22 +37,16 @@ class Pagination{
       result = Array.from({length: this.maxPage}, (val, i) => i + 1);
     } else {
       // MORE THEN FIVE NUMBERS
-      // NUMBERS BEFORE DOTS
-      if(this.currentPage > 2 && this.currentPage < this.maxPage - 1) result.push(1);
-      // if on pre dots digit
-      if(this.currentPage < this.maxPage - 2) result.push(this.currentPage - 1 > 0 ? this.currentPage - 1 : null, this.currentPage, this.currentPage + 1)
-      if(this.currentPage === this.maxPage - 2) result.push(this.currentPage - 2, this.currentPage - 1, this.currentPage)
-      // if on last two digits
-      if(this.currentPage === this.maxPage - 1) result.push(1, 2, this.currentPage - 1);
-      if(this.currentPage === this.maxPage) result.push(1, 2, this.currentPage - 2);
-      
-      // DOTS
-      result.push('dots');
-      // NUMBERS AFTER DOTS
-      result.push(this.maxPage - 1, this.maxPage);
+      result = [ 1 ];
+      if(this.currentPage > 3) result.push('dots1')
+      if(this.currentPage + 1 < this.maxPage) result.push(this.currentPage - 1, this.currentPage, this.currentPage + 1)
+      if(this.currentPage >= this.maxPage - 2) result.push(this.maxPage - 4, this.maxPage - 3);
+      result.push('dots2')
+      result.push(this.maxPage - 2, this.maxPage - 1, this.maxPage)
     }
-    
-    return result;
+
+    // remove duplicates
+    return result.filter((val, i, arr) => arr.slice(i + 1).indexOf(val) === -1).sort((a, b) => a - b);
   }
 
   recalculateData = () => {

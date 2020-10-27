@@ -23,7 +23,7 @@ function PaginationComponent({ pagination }) {
             switch (typeof page) {
               case 'number': return <Button key={ page } currentPage={ pagination.currentPage } page={ page } text={ page } onClick={pagination.goPage} />;
               case 'object': return page;
-              case 'string': return <Button key="dots" disabled text="..." />;
+              case 'string': return <Button key={ page } disabled text="..." />;
               default: return null;
             }
           })
