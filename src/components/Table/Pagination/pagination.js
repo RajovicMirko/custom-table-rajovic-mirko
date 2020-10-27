@@ -46,7 +46,6 @@ class Pagination{
     }
 
     // remove duplicates
-    console.log(result);
     return result.filter((val, i, arr) => arr.slice(i + 1).indexOf(val) === -1).sort((a, b) => a - b);
   }
 
