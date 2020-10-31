@@ -1,18 +1,18 @@
-import React, { Component, createRef } from 'react'
+import React, { Component, createRef } from "react";
 
-import './table.scss';
-import Header from './Header';
-import Row from './Row';
+import "./table.scss";
+import Header from "./Header";
+import Row from "./Row";
 
-import { sortTableByColumn } from './helpers/sortTableByColumn';
-import { filterTable } from './helpers/filterTable';
-import Pagination from './Pagination/pagination';
+import { sortTableByColumn } from "./helpers/sortTableByColumn";
+import { filterTable } from "./helpers/filterTable";
+import Pagination from "./Pagination/pagination";
 
 class Table extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.tableRef = createRef();
-    this.state={
+    this.state = {
       title: props.tableConfig.title,
       useFilter: props.tableConfig.useFilter,
       usePagination: props.tableConfig.usePagination,
@@ -21,14 +21,16 @@ class Table extends Component {
 
       // filter
       filteredBody: props.tableConfig.body,
-      filterInput: '',
+      filterInput: "",
 
       // sorting
-      sortingColumnIndex: null,
-      asc: null,
+      sortConfig: {
+        lastKey: null,
+        sortAsc: null, // true for asc, false for desc
+      },
 
-      pagination: null
-    }
+      pagination: null,
+    };
   }
 
   componentDidMount() {
@@ -36,8 +38,8 @@ class Table extends Component {
     state.pagination = new Pagination({
       ...state.usePagination,
       data: state.body,
-      callBack: (data) => this.setState({ filteredBody: data })
-    })
+      callBack: (data) => this.setState({ filteredBody: data }),
+    });
 
     this.setState({ ...state });
 
@@ -49,74 +51,84 @@ class Table extends Component {
     state.filterInput = e.target.value;
     state.filteredBody = filterTable(this.state.body, state.filterInput);
     state.pagination.changeData(state.filteredBody);
-  }
+  };
 
-  handleSort = async (columnIndexClicked) => {
-    if(this.state.sortingColumnIndex === columnIndexClicked) await this.setState({ asc: !this.state.asc});
-    this.setState({sortingColumnIndex: columnIndexClicked});
+  handleSort = (key) => {
+    const state = this.state;
+    const { newSortConfig, newData } = sortTableByColumn(
+      key,
+      state.sortConfig,
+      state.filteredBody
+    );
 
-    sortTableByColumn(this.tableRef.current, columnIndexClicked, this.state.asc)
-  }
+    state.sortConfig = newSortConfig;
+    state.filteredBody = newData;
+
+    this.setState({ ...state });
+  };
 
   render() {
-    const { title, useFilter, usePagination, header, filterInput, filteredBody, pagination } = this.state;
-    const colspan = header.length ? header.length : "1";
-    
+    const {
+      title,
+      useFilter,
+      usePagination,
+      header,
+      filterInput,
+      filteredBody,
+      pagination,
+    } = this.state;
+    const colspan = header ? Object.keys(header).length : "1";
+
     return (
       <div className="table table-striped table-sm table-wrapper">
         {/* CAPTION */}
-        <div className="caption" colSpan={ colspan }>
-          <h3>{ title }</h3>
+        <div className="caption" colSpan={colspan}>
+          <h3>{title}</h3>
 
-          { 
-            useFilter &&
+          {useFilter && (
             <input
               className="form-control form-control-sm"
               placeholder="Filter"
-              value={ filterInput }
-              onChange={ this.handleInputFilter }
+              value={filterInput}
+              onChange={this.handleInputFilter}
             />
-          }
+          )}
         </div>
 
         {/* TABLE ELEMENT */}
-        <table className="table-sortable table-pagination" ref={ this.tableRef }>
+        <table className="table-sortable table-pagination" ref={this.tableRef}>
           <thead>
-            { 
-              header &&
-              <Header headers={ header } onClick={ this.handleSort } />
-            }
+            {header && <Header headers={header} onClick={this.handleSort} />}
           </thead>
           <tbody>
             {/* DATA EXISTS */}
-            { 
-              filteredBody && filteredBody.length && filteredBody.map(
-                (row, i) => <Row key={i} data={ row } />
-              )
-            }
+            {filteredBody &&
+              filteredBody.length &&
+              filteredBody.map((row, i) => <Row key={i} data={row} />)}
 
             {/* NO DATA */}
-            {
-              !filteredBody &&
+            {!filteredBody && (
               <tr>
-                <td key="no-data" className="no-data" colSpan={ colspan }>No data available</td>
+                <td key="no-data" className="no-data" colSpan={colspan}>
+                  No data available
+                </td>
               </tr>
-            }
+            )}
           </tbody>
 
           <tfoot>
             {/* PAGINATION */}
             {
               <tr>
-                <td colSpan={ colspan }>
-                  { usePagination && pagination && pagination.component() }
+                <td colSpan={colspan}>
+                  {usePagination && pagination && pagination.component()}
                 </td>
               </tr>
             }
           </tfoot>
         </table>
       </div>
-    )
+    );
   }
 }
 
