@@ -25,6 +25,7 @@ class Table extends Component {
 
       // sorting
       sortConfig: {
+        isFiltered: false,
         lastKey: null,
         sortAsc: null, // true for asc, false for desc
       },
@@ -35,6 +36,7 @@ class Table extends Component {
 
   componentDidMount() {
     const state = this.state;
+
     state.pagination = new Pagination({
       ...state.usePagination,
       data: state.body,
@@ -55,16 +57,13 @@ class Table extends Component {
 
   handleSort = (key) => {
     const state = this.state;
-    const { newSortConfig, newData } = sortTableByColumn(
+
+    sortTableByColumn(
       key,
       state.sortConfig,
-      state.filteredBody
+      state.filteredBody,
+      (sortConfig, filteredBody) => this.setState({ sortConfig, filteredBody })
     );
-
-    state.sortConfig = newSortConfig;
-    state.filteredBody = newData;
-
-    this.setState({ ...state });
   };
 
   render() {
@@ -75,6 +74,7 @@ class Table extends Component {
       header,
       filterInput,
       filteredBody,
+      sortConfig,
       pagination,
     } = this.state;
     const colspan = header ? Object.keys(header).length : "1";
@@ -98,7 +98,13 @@ class Table extends Component {
         {/* TABLE ELEMENT */}
         <table className="table-sortable table-pagination" ref={this.tableRef}>
           <thead>
-            {header && <Header headers={header} onClick={this.handleSort} />}
+            {header && (
+              <Header
+                headers={header}
+                sortConfig={sortConfig}
+                onClick={this.handleSort}
+              />
+            )}
           </thead>
           <tbody>
             {/* DATA EXISTS */}

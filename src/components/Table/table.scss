@@ -23,6 +23,15 @@
 
     & thead {
       text-transform: capitalize;
+
+      & .arrows {
+        color: rgb(66, 132, 255);
+        margin: 0;
+        padding: 0;
+        &.hidden {
+          visibility: hidden;
+        }
+      }
     }
 
     & tbody {
