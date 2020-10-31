@@ -9,8 +9,8 @@ class TableView extends Component {
       useFilter: true,
       usePagination: {
         currentPage: 1,
-        rowsPerPage: 20,
-        rowsPerPageArray: [20, 50, 100],
+        rowsPerPage: 10,
+        rowsPerPageArray: [10, 20, 50, 100],
       },
       header: {
         fullName: "Full name",

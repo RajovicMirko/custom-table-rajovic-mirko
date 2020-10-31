@@ -25,7 +25,6 @@ class Table extends Component {
 
       // sorting
       sortConfig: {
-        isFiltered: false,
         lastKey: null,
         sortAsc: null, // true for asc, false for desc
       },
@@ -52,6 +51,12 @@ class Table extends Component {
     const state = this.state;
     state.filterInput = e.target.value;
     state.filteredBody = filterTable(this.state.body, state.filterInput);
+    state.sortConfig = {
+      lastKey: null,
+      sortAsc: null,
+    };
+
+    this.setState({ ...state });
     state.pagination.changeData(state.filteredBody);
   };
 
